@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathnite - Platform Pembelajaran Digital</title>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .nav-item {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%);
+        }
+        
+        .card-gradient {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        }
+        
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="h-full bg-gradient-to-br from-blue-50 to-orange-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50 fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-orange-500 rounded-lg flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-lg">📚</span>
+                        </div>
+                        <h1 id="site-title" class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">Mathnite</h1>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#" class="nav-item text-gray-700 hover:text-blue-600 px-3 py-2 font-medium" onclick="showPage('home')">Beranda</a>
+                        <a href="#" class="nav-item text-gray-700 hover:text-blue-600 px-3 py-2 font-medium" onclick="showPage('books')">Buku Panduan</a>
+                        <a href="#" class="nav-item text-gray-700 hover:text-blue-600 px-3 py-2 font-medium" onclick="showPage('videos')">Video Pembelajaran</a>
+                        <a href="#" class="nav-item text-gray-700 hover:text-blue-600 px-3 py-2 font-medium" onclick="showPage('materials')">Materi Pembelajaran</a>
+                        <a href="#" class="nav-item text-gray-700 hover:text-blue-600 px-3 py-2 font-medium" onclick="showPage('about')">About Us</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-blue-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50">
+            <div class="p-4">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-xl font-bold text-gray-800">Menu</h2>
+                    <button onclick="toggleMobileMenu()" class="text-gray-600">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <a href="#" class="block text-gray-700 hover:text-blue-600 py-2 font-medium" onclick="showPage('home'); toggleMobileMenu()">Beranda</a>
+                    <a href="#" class="block text-gray-700 hover:text-blue-600 py-2 font-medium" onclick="showPage('books'); toggleMobileMenu()">Buku Panduan</a>
+                    <a href="#" class="block text-gray-700 hover:text-blue-600 py-2 font-medium" onclick="showPage('videos'); toggleMobileMenu()">Video Pembelajaran</a>
+                    <a href="#" class="block text-gray-700 hover:text-blue-600 py-2 font-medium" onclick="showPage('materials'); toggleMobileMenu()">Materi Pembelajaran</a>
+                    <a href="#" class="block text-gray-700 hover:text-blue-600 py-2 font-medium" onclick="showPage('about'); toggleMobileMenu()">About Us</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page-section active">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 id="welcome-message" class="text-4xl md:text-6xl font-bold mb-6 bounce-in">Selamat Datang di Platform Pembelajaran Kami</h1>
+                <p id="hero-subtitle" class="text-xl md:text-2xl mb-8 slide-up opacity-90">Belajar dengan mudah, kapan saja, di mana saja</p>
+                <div class="slide-up">
+                    <button onclick="showPage('materials')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg hover-lift mr-4 mb-4">
+                        Mulai Belajar 🚀
+                    </button>
+                    <button onclick="showPage('about')" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white font-bold py-4 px-8 rounded-full text-lg hover-lift mb-4">
+                        About Us
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-16">Fitur Unggulan Kami</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="card-gradient p-8 rounded-xl shadow-lg hover-lift text-center">
+                        <div class="text-4xl mb-4">📚</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Buku Panduan</h3>
+                        <p class="text-gray-600">Buku Panduan Digital Penggunaan Media Kami</p>
+                    </div>
+                    <div class="card-gradient p-8 rounded-xl shadow-lg hover-lift text-center">
+                        <div class="text-4xl mb-4">🎥</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Video Pembelajaran</h3>
+                        <p class="text-gray-600">Video interaktif dengan penjelasan yang mudah dipahami</p>
+                    </div>
+                    <div class="card-gradient p-8 rounded-xl shadow-lg hover-lift text-center">
+                        <div class="text-4xl mb-4">📖</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Materi Terstruktur</h3>
+                        <p class="text-gray-600">Materi pembelajaran yang disusun secara sistematis</p>
+                    </div>
+                    <div class="card-gradient p-8 rounded-xl shadow-lg hover-lift text-center">
+                        <div class="text-4xl mb-4">🌟</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Kualitas Terbaik</h3>
+                        <p class="text-gray-600">Kualitas Terbaik, Karena Kamu Layak Mendapatkan yang Terbaik 💖💗🥰💞</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Books Page -->
+    <div id="books-page" class="page-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">📚 Buku Panduan Digital</h1>
+            <p class="text-xl text-gray-600 text-center mb-12">Baca dan Dalami Yah Buku Panduan Kami🤗</p>
+            
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                        <span class="text-6xl">📗</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Buku Panduan Digital</h3>
+                        <p class="text-gray-600 mb-4">Setiap halaman terpahat rapi, menuntun langkah dalam dunia digital yang luas. Panduan berkualitas ini, cahaya kecil yang menerangi jalan belajar tanpa batas</p>
+                        <div class="flex justify-center">
+                            <a href="https://drive.google.com/file/d/1LKHAOopOKJ5m2UqWmk9-kqqOiYcCGNal/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                            Baca Sekarang
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Videos Page -->
+    <div id="videos-page" class="page-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎥 Video Pembelajaran</h1>
+            <p class="text-xl text-gray-600 text-center mb-12">Tonton video pembelajaran dari kami</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                    <div class="h-48 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                        <span class="text-6xl">▶️</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Unsur Aljabar</h3>
+                        <p class="text-gray-600 mb-4">Video pembelajaran Unsur-Unsur Aljabar 🖥️</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">⏱️ 10 menit</span>
+                            <a href="https://drive.google.com/file/d/19CZQYmlymC2K5yIv8L22p0UPb7DIi7Ge/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                            Tonton
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                        <span class="text-6xl">▶️</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Sifat-Sifat Aljabar</h3>
+                        <p class="text-gray-600 mb-4">Temani Perjalanan Belajar Sifat Aljabar 📚✍🏻</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">⏱️ 12 menit</span>
+                            <a href="https://drive.google.com/file/d/1Ewh6IXrUDH0Iis06HuQYaB5ZvMbw5Hfa/view?usp=drive_link Sifat"
+                            target="_blank"
+                            class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                            Tonton
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                        <span class="text-6xl">▶️</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Operasi Bentuk Aljabar</h3>
+                        <p class="text-gray-600 mb-4">Buka Pintu Pemahaman Operasi Bentuk Aljabar Sekarang 🚀</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">⏱️ 5 menit</span>
+                            <a href="https://drive.google.com/file/d/19IFUqZDeQ-GOiaTDLK4-g4_dH-Lw9v7q/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                            Tonton
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                        <span class="text-6xl">▶️</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Jenis Suku</h3>
+                        <p class="text-gray-600 mb-4">Temukan Rahasia Jenis Suku, Langkah demi Langkah 𝞹📈🧠📚</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">⏱️ 9 menit</span>
+                            <a href="https://drive.google.com/file/d/1UuiiUDu6ZoagfMu6-bdDeRImauk6Xk4e/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                            Tonton
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                    <div class="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                        <span class="text-6xl">▶️</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Aljabar Lanjutan</h3>
+                        <p class="text-gray-600 mb-4">Jangan Lupa Pelajari Aljabar Lanjutan Yah✌️</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">⏱️ 15 menit</span>
+                            <a href="https://drive.google.com/file/d/19l3h_Q5bjHw_2RWJTjLSVDJ4ItY0dRrW/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                            Tonton
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                    <div class="h-48 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+                        <span class="text-6xl">▶️</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Pertidaksamaan</h3>
+                        <p class="text-gray-600 mb-4">Jelajahi dunia Pertidaksamaan Bersama Kami 🔭</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">⏱️ 7 menit</span>
+                            <a href="https://drive.google.com/file/d/1k_BrZScHoRPVAJJePVgYMORk-snKHnjG/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                            Tonton
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materials Page -->
+    <div id="materials-page" class="page-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">📖 Materi Pembelajaran</h1>
+            <p class="text-xl text-gray-600 text-center mb-12">Materi pembelajaran terstruktur untuk kalian ^_^</p>
+            
+            <div class="space-y-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-2xl">📊</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Unsur-Unsur Aljabar</h3>
+                                <p class="text-gray-600">Materi tentang unsur-unsur aljabar data 😊</p>
+                            </div>
+                        </div>  
+                        <a href="https://drive.google.com/file/d/1GQ-IMbRgYY18UN7XX8YX1qhmQOOjChd5/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium">
+                            Akses Materi
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-2xl">📐</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Sifat Aljabar</h3>
+                                <p class="text-gray-600">Pelajari tentang sifat aljabar😄</p>
+                            </div>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1-YqLiTh3jRTFZcYoGk0hMn9QtpeYquXv/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium">
+                            Akses Materi
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-2xl">🧮</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Operasi Bentuk Aljabar</h3>
+                                <p class="text-gray-600">Jelajahi Operasi Bentuk aljabar😇</p>
+                            </div>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1ii4ScjtTa8NNkmU8Eu67m9Eg-5pC32Aj/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium">
+                            Akses Materi
+                        </a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-2xl">🔢</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Jenis Suku</h3>
+                                <p class="text-gray-600">Ayo dalami jenis-jenis suku dalam aljabar💪</p>
+                            </div>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1KjDERmmFrE-fNRzsj5DhH6qWYxRXuOX2/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg font-medium">
+                            Akses Materi
+                        </a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-2xl">🥇</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Aljabar Lanjutan</h3>
+                                <p class="text-gray-600">Lanjutkan ke Aljabar Lanjutan bro🙏</p>
+                            </div>
+                        </div>
+                        <a href="https://drive.google.com/file/d/17uXAyG3G82LA0HP-kiIeByLpQnO3uktz/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-medium">
+                            Akses Materi
+                        </a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                                <span class="text-2xl">≠</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Pertidaksamaan</h3>
+                                <p class="text-gray-600">Jangan Lupa Cek Aku Yah✌️</p>
+                            </div>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1q3n-2WYXSpFucolcp-VvAcZwZLxhI5SF/view?usp=drive_link"
+                            target="_blank"
+                            class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg font-medium">
+                            Akses Materi
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about-page" class="page-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">👥 About Us</h1>
+            
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Tentang Mathnite</h2>
+                <p id="about-description" class="text-gray-600 text-lg leading-relaxed mb-6">
+                    Kami menyediakan platform pembelajaran digital yang di dalamnya ada materi mengenai aljabar yang dapat diakses oleh semua orang. Kami akann membantu kalian untuk mencapai potensi terbaik kalian 🙂                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">🎯</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Misi</h3>
+                        <p class="text-gray-600">Membuat media belajar yang berkualitas dan dapat diakses oleh semua orang 😇</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">💎</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Nilai</h3>
+                        <p class="text-gray-600">Kualitas, inovasi, dan aksesibilitas dalam pendidikan 🙌🏻</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration object for Element SDK
+        const defaultConfig = {
+            site_title: "Mathnite",
+            welcome_message: "Selamat Datang di Platform Pembelajaran Kami 😊",
+            hero_subtitle: "Belajar dengan mudah, kapan saja, di mana saja 😁",
+            about_description: "Kami menyediakan platform pembelajaran digital yang di dalamnya ada materi mengenai aljabar yang dapat diakses oleh semua orang. Kami akan membantu kalian untuk mencapai potensi terbaik kalian 🙂"
+        }
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('open');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuButton = event.target.closest('button');
+            
+            if (!mobileMenu.contains(event.target) && !menuButton) {
+                mobileMenu.classList.remove('open');
+            }
+        });
+
+        // Element SDK implementation
+        async function render(config) {
+            // Update site title
+            const siteTitleElement = document.getElementById('site-title');
+            if (siteTitleElement) {
+                siteTitleElement.textContent = config.site_title || defaultConfig.site_title;
+            }
+
+            // Update welcome message
+            const welcomeMessageElement = document.getElementById('welcome-message');
+            if (welcomeMessageElement) {
+                welcomeMessageElement.textContent = config.welcome_message || defaultConfig.welcome_message;
+            }
+
+            // Update hero subtitle
+            const heroSubtitleElement = document.getElementById('hero-subtitle');
+            if (heroSubtitleElement) {
+                heroSubtitleElement.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+            }
+
+            // Update about description
+            const aboutDescriptionElement = document.getElementById('about-description');
+            if (aboutDescriptionElement) {
+                aboutDescriptionElement.textContent = config.about_description || defaultConfig.about_description;
+            }
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["site_title", config.site_title || defaultConfig.site_title],
+                ["welcome_message", config.welcome_message || defaultConfig.welcome_message],
+                ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
+                ["about_description", config.about_description || defaultConfig.about_description]
+            ]);
+        }
+
+        // Initialize Element SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                render,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+
+        // Add smooth scrolling for anchor links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add entrance animations to elements
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe elements for animation
+            const animatedElements = document.querySelectorAll('.hover-lift, .card-gradient');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ebde1982a8a396',t:'MTc2MDQ5NTE0NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
